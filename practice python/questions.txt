@@ -1,0 +1,303 @@
+Perfect. Since you’ve already covered core OOP concepts, the best next step is solving progressively harder problems that force you to *combine* concepts instead of using them separately.
+
+Here are 10 questions from beginner → advanced.
+
+---
+
+# 1. Student Class (Class + Instance Variables)
+
+Create a class `Student`:
+
+* instance variables:
+
+  * `name`
+  * `marks`
+* class variable:
+
+  * `school_name`
+* method:
+
+  * `show_details()`
+
+Create 2 students and show:
+
+* how instance variables change per object
+* how class variables stay shared
+
+Concepts:
+
+* class variables
+* constructors
+* objects
+
+---
+
+# 2. Bank Account with Deposit/Withdraw
+
+Create a class `BankAccount`:
+
+Features:
+
+* `deposit(amount)`
+* `withdraw(amount)`
+* `show_balance()`
+
+Rules:
+
+* balance cannot go below 0
+* print proper messages
+
+Concepts:
+
+* encapsulation mindset
+* methods
+* condition checking
+
+---
+
+# 3. Inheritance Practice — Employee System
+
+Create:
+
+* `Employee`
+* `Manager`
+
+`Employee` should have:
+
+* name
+* salary
+* `show_info()`
+
+`Manager` should additionally have:
+
+* department
+
+Use inheritance properly.
+
+Concepts:
+
+* inheritance
+* `super()`
+
+---
+
+# 4. Multiple Inheritance — Smart Phone
+
+Create:
+
+* `Camera`
+* `MusicPlayer`
+* `SmartPhone`
+
+`SmartPhone` should inherit both.
+
+Methods:
+
+* `take_photo()`
+* `play_music()`
+
+Concepts:
+
+* multiple inheritance
+* MRO understanding
+
+---
+
+# 5. Polymorphism — Animals
+
+Create:
+
+* `Dog`
+* `Cat`
+* `Cow`
+
+Each should have:
+
+* `sound()`
+
+Loop through all objects and call:
+
+```python
+animal.sound()
+```
+
+Concepts:
+
+* runtime polymorphism
+* common interface
+
+---
+
+# 6. Duck Typing Challenge
+
+Create:
+
+* `PDFFile`
+* `ImageFile`
+* `VideoFile`
+
+Each should have:
+
+```python
+open()
+```
+
+Now create:
+
+```python
+def open_file(file):
+    file.open()
+```
+
+Pass different objects into the function.
+
+Concepts:
+
+* duck typing
+* flexible design
+
+---
+
+# 7. Aggregation — Department and Teachers
+
+Create:
+
+* `Teacher`
+* `Department`
+
+A department contains multiple teachers.
+
+Requirements:
+
+* add teachers
+* show all teachers
+
+Concepts:
+
+* aggregation
+* object relationships
+
+---
+
+# 8. Abstract Class — Payment Gateway
+
+Create abstract class:
+
+```python
+Payment
+```
+
+Abstract method:
+
+```python
+pay(amount)
+```
+
+Child classes:
+
+* `UPIPayment`
+* `CardPayment`
+
+Each should implement differently.
+
+Concepts:
+
+* abstract classes
+* enforced methods
+
+---
+
+# 9. Advanced OOP Mini Project — Library System
+
+Create:
+
+* `Book`
+* `Member`
+* `Library`
+
+Features:
+
+* add books
+* issue books
+* return books
+* track issued status
+
+Requirements:
+
+* use aggregation
+* use class variables
+* use inheritance if possible
+
+Concepts:
+
+* real-world OOP design
+* object interaction
+
+---
+
+# 10. Advanced Combined Challenge — Food Delivery App
+
+Build a mini backend model of a food app.
+
+Classes:
+
+* `Restaurant`
+* `MenuItem`
+* `Customer`
+* `Order`
+* `Payment` (abstract class)
+
+Use:
+
+* inheritance
+* polymorphism
+* aggregation
+* abstract class
+* class variables
+* duck typing if possible
+
+Features:
+
+* place order
+* calculate bill
+* pay using different payment methods
+* show order summary
+
+This is where your OOP starts becoming “developer-level”.
+
+---
+
+# Recommended Order
+
+Do them exactly in this sequence:
+1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10
+
+Because each builds mental models needed for the next.
+
+---
+
+# Important Rule
+
+While solving:
+
+* first think on paper
+* identify:
+
+  * which object owns what
+  * which class should contain which method
+  * where inheritance is actually useful
+* THEN code
+
+That thinking process is what separates:
+
+* “I know syntax”
+  from
+* “I can design software”
+
+If you want, next I can also give:
+
+* expected difficulty for each
+* hints only
+* real industry versions
+* common mistakes
+* or fully detailed solutions one-by-one after you attempt them.
