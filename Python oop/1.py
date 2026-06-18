@@ -10,4 +10,5 @@ student1=Student("Sahil",97)
 student2=Student("abcd",99)
 student1.show_details()
 student2.show_details()
-print(Student.college_name)
+print(Student.college_name) 
+#
