@@ -32,7 +32,7 @@ A set of 30 practice questions covering Python Object-Oriented Programming, from
 19. What is aggregation in OOP? Write a small example with two classes showing an aggregation relationship.
 20. Create a class `Employee` and a class `Department` where a `Department` object contains a list of `Employee` objects (composition).
 
----
+----
 
 ## 🔴 Advanced (21–30)
 
