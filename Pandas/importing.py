@@ -12,7 +12,7 @@ print(imp)
 print(imp["Column"])
 
 print("--------------------------------------------------------------------------------")
-Selects row using loc
+# Selects row using loc
 
 print(imp.loc[0])
 

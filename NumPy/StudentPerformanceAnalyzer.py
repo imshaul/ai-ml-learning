@@ -20,6 +20,7 @@ print(f"Last Student marks are : {marks[4]}")
 print(f"Whole class Maths marks: {marks[:,0]}")
 
 # Filtering
+
 print("Scores above 90:")
 print(marks[marks>90])
 

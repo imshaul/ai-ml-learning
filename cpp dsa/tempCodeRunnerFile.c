@@ -1,0 +1,1 @@
+(*rear = SIZE - 1 && *front == 0)||(*front == *rear + 1)
