@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Insurance Cost Estimator</title>
+<style>
+:root{--bg:#fff;--ink:#1d1d1f;--muted:#6e6e73;--fill:#f5f5f7;--line:#d2d2d7;--blue:#0071e3;--warn:#b42318;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.47;-webkit-font-smoothing:antialiased;
+font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue','Segoe UI',Arial,sans-serif}
+main{max-width:560px;margin:0 auto;padding:56px 20px 48px;text-align:center}
+h1{font-size:2.4rem;font-weight:600;letter-spacing:-.022em;line-height:1.1;margin:0 0 10px}
+.sub{color:var(--muted);font-size:1.1rem;margin:0 auto 36px;max-width:40ch}
+.form{text-align:left}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.field{margin-bottom:18px}
+.t{display:block;font-size:.85rem;color:var(--muted);margin:0 0 6px 4px}
+input[type=number],select{width:100%;height:46px;padding:0 14px;font:inherit;font-size:1rem;color:var(--ink);background:var(--fill);border:1px solid transparent;border-radius:12px;appearance:none;-webkit-appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 20px,calc(100% - 15px) 20px;background-size:5px 5px;background-repeat:no-repeat}
+input:focus-visible,select:focus-visible,button:focus-visible,.seg input:focus-visible+span{outline:2px solid var(--blue);outline-offset:2px}
+.seg{display:flex;background:var(--fill);border-radius:10px;padding:3px}
+.seg label{flex:1;cursor:pointer}
+.seg input{position:absolute;opacity:0}
+.seg span{display:block;text-align:center;padding:9px 0;border-radius:8px;font-size:.95rem}
+.seg input:checked+span{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15);font-weight:500}
+button.go{width:100%;height:48px;margin-top:6px;font:inherit;font-size:1.05rem;color:#fff;background:var(--blue);border:0;border-radius:980px;cursor:pointer}
+button.go:hover{background:#0077ed}
+#err{color:var(--warn);min-height:1.4em;margin:12px 0 0;text-align:center;font-size:.95rem}
+#out{display:none;margin-top:44px}
+.lbl{color:var(--muted);font-size:.95rem;margin:0}
+.big{font-size:3.4rem;font-weight:600;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums;margin:4px 0 8px}
+#out p{margin:6px auto;color:var(--muted);max-width:46ch}
+.chart{margin-top:36px}
+.chart h2{font-size:1.15rem;font-weight:600;margin:0 0 4px}
+svg{width:100%;height:auto;display:block;margin-top:10px}
+svg text{font-size:12px;fill:#6e6e73;font-family:inherit}
+.note{font-size:.8rem;color:var(--muted);margin:48px auto 0;max-width:56ch}
+@media (max-width:440px){.row{grid-template-columns:1fr}h1{font-size:2rem}.big{font-size:2.8rem}}
+</style>
+</head>
+<body>
+<main>
+<h1>Estimate your yearly insurance cost.</h1>
+<p class="sub">Enter a few details and see how age and smoking change the price.</p>
+<div class="form">
+  <div class="row">
+    <div class="field"><label class="t" for="age">Age</label><input id="age" type="number" min="18" max="64" inputmode="numeric" placeholder="18 to 64"></div>
+    <div class="field"><label class="t" for="bmi">BMI</label><input id="bmi" type="number" min="15" max="54" step="0.1" inputmode="decimal" placeholder="15 to 54"></div>
+    <div class="field"><label class="t" for="kids">Children</label><input id="kids" type="number" min="0" max="5" inputmode="numeric" placeholder="0 to 5"></div>
+  </div>
+  <div class="row" style="grid-template-columns:1fr 1fr">
+    <div class="field"><span class="t">Sex</span><div class="seg"><label><input type="radio" name="sex" value="male" checked><span>Male</span></label><label><input type="radio" name="sex" value="female"><span>Female</span></label></div></div>
+    <div class="field"><span class="t">Smoker</span><div class="seg"><label><input type="radio" name="smoker" value="no" checked><span>No</span></label><label><input type="radio" name="smoker" value="yes"><span>Yes</span></label></div></div>
+  </div>
+  <div class="field"><label class="t" for="region">Region</label>
+    <select id="region"><option value="northeast">Northeast</option><option value="northwest">Northwest</option><option value="southeast">Southeast</option><option value="southwest">Southwest</option></select></div>
+  <button class="go" id="go" type="button">Estimate</button>
+  <p id="err" role="alert"></p>
+</div>
+<div id="out" aria-live="polite">
+  <p class="lbl">Estimated yearly cost</p>
+  <div class="big" id="est"></div>
+  <p id="range"></p>
+  <p id="why"></p>
+  <div class="chart">
+    <h2>How the cost changes with age</h2>
+    <p class="lbl">Your other details stay the same.</p>
+    <svg id="chart" viewBox="0 0 640 300" role="img" aria-label="Line chart of estimated yearly cost by age for smokers and non-smokers"></svg>
+  </div>
+</div>
+<p class="note">A learning project: a linear regression model trained on 1,338 customers from a public dataset (R² 0.78, typical error about $5,800). It is not real insurance pricing.</p>
+</main>
+<script>
+// Weights learned in the notebook (LinearRegression on the insurance dataset)
+var W={age:256.975706,bmi:337.092552,children:425.278784,sex_male:-18.591692,smoker_yes:23651.128856,
+region_northwest:-370.677326,region_southeast:-657.864297,region_southwest:-809.799354};
+var B=-11931.219050,RMSE=5796,FLOOR=1100;
+function money(n){return '$'+Math.round(n).toLocaleString('en-US');}
+function val(n){return document.querySelector('input[name="'+n+'"]:checked').value;}
+function calc(p,age,smoker){
+  var y=B+W.age*age+W.bmi*p.bmi+W.children*p.kids+(p.male?W.sex_male:0)+(smoker?W.smoker_yes:0)
+   +(p.region==='northwest'?W.region_northwest:0)+(p.region==='southeast'?W.region_southeast:0)+(p.region==='southwest'?W.region_southwest:0);
+  return Math.max(y,FLOOR);
+}
+function draw(p){
+  var X0=46,X1=610,Y0=16,Y1=256,i,a,s='',ages=[];
+  for(a=18;a<=64;a+=2)ages.push(a);
+  var yes=ages.map(function(a){return calc(p,a,true)}),no=ages.map(function(a){return calc(p,a,false)});
+  var top=Math.ceil(Math.max.apply(null,yes.concat(no))/10000)*10000;
+  var xs=function(a){return X0+(a-18)/46*(X1-X0)},ys=function(v){return Y1-v/top*(Y1-Y0)};
+  for(i=0;i<=top;i+=10000){s+='<line x1="'+X0+'" x2="'+X1+'" y1="'+ys(i)+'" y2="'+ys(i)+'" stroke="#e5e5ea"/><text x="'+(X0-8)+'" y="'+(ys(i)+4)+'" text-anchor="end">$'+(i/1000)+'k</text>';}
+  [20,30,40,50,60].forEach(function(a){s+='<text x="'+xs(a)+'" y="278" text-anchor="middle">'+a+'</text>';});
+  var pts=function(arr){return arr.map(function(v,k){return xs(ages[k]).toFixed(1)+','+ys(v).toFixed(1)}).join(' ')};
+  s+='<polyline points="'+pts(no)+'" fill="none" stroke="#86868b" stroke-width="2.5" stroke-linecap="round"/>';
+  s+='<polyline points="'+pts(yes)+'" fill="none" stroke="#0071e3" stroke-width="2.5" stroke-linecap="round"/>';
+  s+='<text x="'+(X1-4)+'" y="'+(ys(yes[yes.length-1])-8)+'" text-anchor="end" style="fill:#0071e3">Smoker</text>';
+  s+='<text x="'+(X1-4)+'" y="'+(ys(no[no.length-1])-8)+'" text-anchor="end">Non-smoker</text>';
+  s+='<circle cx="'+xs(p.age)+'" cy="'+ys(p.est)+'" r="6" fill="#0071e3" stroke="#fff" stroke-width="2.5"/>';
+  document.getElementById('chart').innerHTML=s;
+}
+document.getElementById('go').addEventListener('click',function(){
+  var age=parseFloat(document.getElementById('age').value),bmi=parseFloat(document.getElementById('bmi').value),
+    kids=parseFloat(document.getElementById('kids').value),err=document.getElementById('err'),out=document.getElementById('out');
+  err.textContent='';out.style.display='none';
+  if(!(age>=18&&age<=64)){err.textContent='Enter an age between 18 and 64.';return;}
+  if(!(bmi>=15&&bmi<=54)){err.textContent='Enter a BMI between 15 and 54.';return;}
+  if(!(kids>=0&&kids<=5&&Math.floor(kids)===kids)){err.textContent='Enter 0 to 5 children, as a whole number.';return;}
+  var p={age:age,bmi:bmi,kids:kids,male:val('sex')==='male',region:document.getElementById('region').value},smoker=val('smoker')==='yes';
+  p.est=calc(p,age,smoker);
+  document.getElementById('est').textContent=money(p.est);
+  document.getElementById('range').textContent='Likely range: '+money(Math.max(p.est-RMSE,FLOOR))+' to '+money(p.est+RMSE)+'.';
+  var w=smoker?'Smoking adds about '+money(W.smoker_yes)+' to this estimate, far more than any other factor.':
+    'Not smoking keeps this estimate about '+money(W.smoker_yes)+' lower than for a smoker with the same details.';
+  if(p.est<=FLOOR)w+=' The model gives very low values for young, low-BMI non-smokers, so this is shown at about the lowest bills in the data.';
+  document.getElementById('why').textContent=w;
+  draw(p);out.style.display='block';
+});
+</script>
+</body>
+</html>
